@@ -8,7 +8,133 @@
     <p>This project demonstrates my skills in software engineering. Below is the enhanced version of my project:</p>
     <h2>Code</h2>
     <pre><code>
-// Paste your enhanced code here
+        // Enhanced NumericOverflows.cpp
+// This program tests for numeric overflow and underflow across multiple data types.
+// Enhancements include removing unnecessary dynamic memory allocation, improving error handling,
+// and simplifying the overflow and underflow detection logic for better readability and maintainability.
+
+#include <exception>
+#include <iostream>
+#include <limits>
+
+// Function to add numbers and detect overflow
+template <typename T>
+T add_numbers(T const& start, T const& increment, unsigned long int const& steps) {
+    T result = start;
+    for (unsigned long int i = 0; i < steps; ++i) {
+        try {
+            // Perform addition and check for overflow
+            T temp = result + increment;
+            if ((result > 0 && increment > 0 && temp < 0) ||
+                (result < 0 && increment < 0 && temp > 0)) {
+                throw std::overflow_error("Overflow detected during addition.");
+            }
+            result = temp;
+        }
+        catch (const std::overflow_error& e) {
+            // Handle overflow exception and stop the operation
+            std::cerr << e.what() << " Last good value: " << result << std::endl;
+            break;
+        }
+    }
+    return result;
+}
+
+// Function to subtract numbers and detect underflow
+template <typename T>
+T subtract_numbers(T const& start, T const& decrement, unsigned long int const& steps) {
+    T result = start;
+    for (unsigned long int i = 0; i < steps; ++i) {
+        try {
+            // Perform subtraction and check for underflow
+            T temp = result - decrement;
+            if ((result > 0 && decrement > 0 && temp < 0) ||
+                (result < 0 && decrement < 0 && temp > 0)) {
+                throw std::underflow_error("Underflow detected during subtraction.");
+            }
+            result = temp;
+        }
+        catch (const std::underflow_error& e) {
+            // Handle underflow exception and stop the operation
+            std::cerr << e.what() << " Last good value: " << result << std::endl;
+            break;
+        }
+    }
+    return result;
+}
+
+// Function to test for overflow conditions using a specific type
+template <typename T>
+void test_overflow() {
+    const unsigned long int steps = 5;
+    const T increment = std::numeric_limits<T>::max() / steps;
+    const T start = 0;
+
+    std::cout << "Overflow Test of Type = " << typeid(T).name() << std::endl;
+    std::cout << "\tAdding Numbers Without Overflow (" << +start << ", " << +increment << ", " << steps << ") = ";
+    std::cout << +add_numbers<T>(start, increment, steps) << std::endl;
+
+    std::cout << "\tAdding Numbers With Overflow (" << +start << ", " << +increment << ", " << (steps + 1) << ") = ";
+    std::cout << +add_numbers<T>(start, increment, steps + 1) << std::endl;
+}
+
+// Function to test for underflow conditions using a specific type
+template <typename T>
+void test_underflow() {
+    const unsigned long int steps = 5;
+    const T decrement = std::numeric_limits<T>::max() / steps;
+    const T start = std::numeric_limits<T>::max();
+
+    std::cout << "Underflow Test of Type = " << typeid(T).name() << std::endl;
+    std::cout << "\tSubtracting Numbers Without Underflow (" << +start << ", " << +decrement << ", " << steps << ") = ";
+    std::cout << +subtract_numbers<T>(start, decrement, steps) << std::endl;
+
+    std::cout << "\tSubtracting Numbers With Underflow (" << +start << ", " << +decrement << ", " << (steps + 1) << ") = ";
+    std::cout << +subtract_numbers<T>(start, decrement, steps + 1) << std::endl;
+}
+
+// Function to run all overflow tests
+void do_overflow_tests(const std::string& star_line) {
+    std::cout << std::endl << star_line << std::endl;
+    std::cout << "*** Running Overflow Tests ***" << std::endl;
+    std::cout << star_line << std::endl;
+
+    test_overflow<int>();
+    test_overflow<long>();
+    test_overflow<long long>();
+    test_overflow<unsigned int>();
+    test_overflow<unsigned long>();
+    test_overflow<float>();
+    test_overflow<double>();
+}
+
+// Function to run all underflow tests
+void do_underflow_tests(const std::string& star_line) {
+    std::cout << std::endl << star_line << std::endl;
+    std::cout << "*** Running Underflow Tests ***" << std::endl;
+    std::cout << star_line << std::endl;
+
+    test_underflow<int>();
+    test_underflow<long>();
+    test_underflow<long long>();
+    test_underflow<unsigned int>();
+    test_underflow<unsigned long>();
+    test_underflow<float>();
+    test_underflow<double>();
+}
+
+// Main function to start the program
+int main() {
+    const std::string star_line = std::string(50, '*');
+
+    std::cout << "Starting Numeric Underflow / Overflow Tests!" << std::endl;
+    do_overflow_tests(star_line);
+    do_underflow_tests(star_line);
+    std::cout << std::endl << "All Numeric Underflow / Overflow Tests Complete!" << std::endl;
+
+    return 0;
+}
+
     </code></pre>
     <h2>Improvements</h2>
     <p>Include a description of the enhancements made to this project and how they align with the course outcomes.</p>
